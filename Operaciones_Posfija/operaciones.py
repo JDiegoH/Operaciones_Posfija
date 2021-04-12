@@ -55,8 +55,67 @@ print(en_orden(expresion) + " = " + str(evaluar(expresion)))'''
 
 archivo = abrir_archivo()
 
-pila = leer_archivo(archivo)
+lista = leer_archivo(archivo)
+
+pila = []
+
+for i in lista[0]:
+    
+    for j in i:
+        
+        if j != " ":
+            
+            pila.append(j)
 
 print(pila)
 
+raiz = pila.pop()
+
+expresion = Nodo(raiz)
+
+while len(pila) != 0:
+    
+    if pila[len(pila)-1].isnumeric():
+        
+        expresion.izquierda = pila.pop()
+        
+    else:
+        
+        expresion.derecha = Nodo(pila.pop())
+
+print(en_orden(expresion))
+
 archivo.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
