@@ -73,15 +73,40 @@ raiz = pila.pop()
 
 expresion = Nodo(raiz)
 
-while len(pila) != 0:
+
+def meter_arbol(expresion, pila):
     
-    if pila[len(pila)-1].isnumeric():
+    if len(pila) > 0:
         
-        expresion.izquierda = pila.pop()
+        if pila[len(pila)-1].isnumeric():
         
-    else:
+            if expresion.derecha is None:
         
-        expresion.derecha = Nodo(pila.pop())
+                expresion.derecha = pila.pop()
+        
+            else:
+            
+                expresion.izquierda = pila.pop()
+        
+            meter_arbol(expresion, pila)
+        
+        else:
+        
+            if expresion.derecha is None:
+        
+                expresion.derecha = Nodo(pila.pop())
+            
+                meter_arbol(expresion.derecha, pila)
+        
+            else:
+            
+                expresion.izquierda = Nodo(pila.pop())
+        
+                meter_arbol(expresion.izquierda, pila)
+
+
+
+meter_arbol(expresion, pila)
 
 print(en_orden(expresion))
 
