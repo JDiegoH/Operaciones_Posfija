@@ -28,14 +28,15 @@ def evaluar(arbol):
             return evaluar(arbol.izquierda) // evaluar(arbol.derecha)
         return int(arbol.valor)
 
-def abrir_archivo():
+def abrir_archivo(titulo):
 
-    archivo = open("taller01/operaciones.txt","r")
+    archivo = open(titulo,"r")
     return archivo
 
-def cerrar_archivo(archivo):
+def escribir_archivo(titulo):
 
-    archivo.close()
+    archivo = open(titulo,"w")
+    return archivo
 
 def leer_archivo(archivo):
     
@@ -47,86 +48,64 @@ def leer_archivo(archivo):
     
     return(lista)
 
-'''expresion = Nodo('-', Nodo('+', Nodo('-', Nodo(10), Nodo(5)), Nodo('*', Nodo(2), Nodo(3))), Nodo('/', Nodo(5), Nodo(2)))
+def meter_arbol(expresion, pila):
 
-expresion1 = Nodo(1,2) 
+    while len(pila) > 0:
 
-print(en_orden(expresion) + " = " + str(evaluar(expresion)))'''
+        if pila[-1].isnumeric():
 
-archivo = abrir_archivo()
+            if expresion.derecha is None:
+                expresion.derecha = Nodo(pila.pop())
+                meter_arbol(expresion, pila)
+
+            elif expresion.izquierda is None:
+                expresion.izquierda = Nodo(pila.pop())
+                meter_arbol(expresion, pila)
+
+            else: 
+                break
+            
+        else:
+            if expresion.derecha is None:
+
+                expresion.derecha = Nodo(pila.pop())
+                meter_arbol(expresion.derecha, pila)
+
+            elif expresion.izquierda is None:
+
+                expresion.izquierda = Nodo(pila.pop())
+                meter_arbol(expresion.izquierda, pila)
+            
+            else: 
+                break
+
+archivo = abrir_archivo("taller01/operaciones.txt")
 
 lista = leer_archivo(archivo)
 
-pila = []
-
-for i in lista[0]:
-    
-    for j in i:
-        
-        if j != " ":
-            
-            pila.append(j)
-
-print(pila)
-
-raiz = pila.pop()
-
-expresion = Nodo(raiz)
-
-
-def meter_arbol(expresion, pila):
-    if len(pila) > 0:
-        if pila[len(pila)-1].isnumeric():
-            if expresion.derecha is None:
-                expresion.derecha = Nodo(pila.pop())
-            else:
-                expresion.izquierda = Nodo(pila.pop())
-            meter_arbol(expresion, pila)
-        else:
-            if expresion.derecha is None:
-                expresion.derecha = Nodo(pila.pop())
-                meter_arbol(expresion.derecha, pila)
-            else:
-                expresion.izquierda = Nodo(pila.pop())
-                meter_arbol(expresion.izquierda, pila)
-
-
-
-meter_arbol(expresion, pila)
-
-print(en_orden(expresion))
-
 archivo.close()
 
+resultados = escribir_archivo("taller01/resultados.txt")
+
+while len(lista) > 0:
+
+    pila = []
+
+    for i in lista.pop():
+    
+        for j in i: 
+        
+            if j != " ":
+            
+                pila.append(j)
+
+    raiz = pila.pop()
+
+    expresion = Nodo(raiz)
+
+    meter_arbol(expresion, pila)
+
+    resultados.write(en_orden(expresion) + " = " + str(evaluar(expresion))+"\n")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+resultados.close()
